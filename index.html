@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тестирование знаний</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .info-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .info-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .info-card li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            color: #555;
+        }
+        
+        .info-card li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .iframe-container {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        iframe {
+            width: 100%;
+            height: 700px;
+            border: none;
+            display: block;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9em;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(255,255,255,0.5);
+        }
+        
+        .footer a:hover {
+            border-bottom-color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .header p { font-size: 1em; }
+            iframe { height: 600px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 Система тестирования знаний</h1>
+        <p>Проверьте свои знания в удобном формате</p>
+    </div>
+    
+    <div class="container">
+        <div class="info-card">
+            <h3>📌 Как это работает?</h3>
+            <ul>
+                <li>Введите свои ФИО</li>
+                <li>Выберите категорию тестирования</li>
+                <li>Ответьте на вопросы</li>
+                <li>Узнайте результат сразу после завершения</li>
+                <li>Результаты сохраняются в таблицу</li>
+            </ul>
+        </div>
+        
+        <div class="iframe-container">
+            <!-- ВСТАВЬ СВОЮ ССЫЛКУ -->
+            <iframe 
+                src="https://script.google.com/macros/s/AKfycbw0LvEdxu90unsMlW8ausOoPBh17l9BIWSlyDhwH5N-HKj6waBIUlfuQHjjSiKt8Hsi/exec" 
+                title="Тестирование"
+                loading="lazy">
+            </iframe>
+        </div>
+        
+        <div class="footer">
+            🔒 Все данные защищены | Результаты сохраняются в таблицу | 
+            <a href="https://script.google.com/macros/s/AKfycbw0LvEdxu90unsMlW8ausOoPBh17l9BIWSlyDhwH5N-HKj6waBIUlfuQHjjSiKt8Hsi/exec" target="_blank">
+                Открыть в отдельном окне
+            </a>
+        </div>
+    </div>
+</body>
+</html>
