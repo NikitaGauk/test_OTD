@@ -51,21 +51,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             border: 1px solid rgba(255,255,255,0.3);
         }
-        
-        .info-card h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .info-card h3:before {
-            content: "📌";
-            font-size: 1.2em;
-        }
-        
+                
         .info-card ul {
             list-style: none;
             padding: 0;
@@ -113,27 +99,6 @@
             height: 700px;
             border: none;
             display: block;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: rgba(255,255,255,0.8);
-            font-size: 0.9em;
-            margin-top: 20px;
-        }
-        
-        .footer a {
-            color: white;
-            text-decoration: none;
-            border-bottom: 1px dotted rgba(255,255,255,0.5);
-            padding: 2px 0;
-            transition: all 0.3s;
-        }
-        
-        .footer a:hover {
-            border-bottom-color: white;
-            letter-spacing: 0.5px;
         }
         
         .stats-badge {
@@ -199,7 +164,6 @@
     
     <div class="container">
         <div class="info-card">
-            <h3>Как это работает?</h3>
             <ul>
                 <li>Введите свои ФИО</li>
                 <li>Выберите категорию тестирования</li>
@@ -209,7 +173,6 @@
         </div>
         
         <div class="iframe-container">
-            <!-- НОВАЯ ССЫЛКА -->
             <iframe 
                 src="https://script.google.com/macros/s/AKfycbzTNSgO7OVrdxDWaV1wRtrZ_sRxShaNlAmvDZU6rNP8YcZIsZXyjnCnKwjtxbBeRAjG/exec" 
                 title="Тестирование"
@@ -217,7 +180,6 @@
                 allow="microphone; camera">
             </iframe>
         </div>
-        
     </div>
     
     <div class="loading" id="loading">
@@ -225,14 +187,6 @@
     </div>
     
     <script>
-        // Показываем загрузку при клике на ссылку
-        document.querySelector('a[target="_blank"]').addEventListener('click', function() {
-            document.getElementById('loading').style.display = 'flex';
-            setTimeout(function() {
-                document.getElementById('loading').style.display = 'none';
-            }, 2000);
-        });
-        
         // Скрываем загрузку после загрузки iframe
         document.querySelector('iframe').addEventListener('load', function() {
             document.getElementById('loading').style.display = 'none';
@@ -242,11 +196,6 @@
         document.querySelector('iframe').addEventListener('error', function() {
             alert('Ошибка загрузки тестирования. Пожалуйста, обновите страницу или попробуйте позже.');
         });
-        
-        // Добавляем год в копирайт
-        document.querySelector('.footer').innerHTML += 
-            '<br><span style="font-size: 0.8em; opacity: 0.7; margin-top: 10px; display: block;">© ' + 
-            new Date().getFullYear() + ' Система тестирования</span>';
     </script>
 </body>
 </html>
