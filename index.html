@@ -29,6 +29,7 @@
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
         
         .header p {
@@ -48,30 +49,50 @@
             padding: 25px;
             margin-bottom: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
         }
         
         .info-card h3 {
             color: #333;
             margin-bottom: 15px;
             font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-card h3:before {
+            content: "📌";
+            font-size: 1.2em;
         }
         
         .info-card ul {
             list-style: none;
             padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
         }
         
         .info-card li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
             color: #555;
+            border-left: 3px solid #667eea;
+            transition: transform 0.2s;
+        }
+        
+        .info-card li:hover {
+            transform: translateX(5px);
+            background: #f0f2f5;
         }
         
         .info-card li:before {
             content: "✓ ";
             color: #28a745;
             font-weight: bold;
-            margin-right: 10px;
+            margin-right: 8px;
         }
         
         .iframe-container {
@@ -79,6 +100,12 @@
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: transform 0.3s;
+        }
+        
+        .iframe-container:hover {
+            transform: translateY(-5px);
         }
         
         iframe {
@@ -93,59 +120,133 @@
             padding: 20px;
             color: rgba(255,255,255,0.8);
             font-size: 0.9em;
+            margin-top: 20px;
         }
         
         .footer a {
             color: white;
             text-decoration: none;
             border-bottom: 1px dotted rgba(255,255,255,0.5);
+            padding: 2px 0;
+            transition: all 0.3s;
         }
         
         .footer a:hover {
             border-bottom-color: white;
+            letter-spacing: 0.5px;
+        }
+        
+        .stats-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
         }
         
         @media (max-width: 768px) {
             .header h1 { font-size: 1.8em; }
             .header p { font-size: 1em; }
             iframe { height: 600px; }
+            .info-card ul {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            iframe { height: 550px; }
+            .container { padding: 0 10px; }
+            .info-card { padding: 15px; }
+        }
+        
+        /* Анимация загрузки */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>📋 Система тестирования знаний</h1>
-        <p>Проверьте свои знания в удобном формате</p>
+        <h1>📋 Система тестирования</h1>
+        <p>Отдел эксплуатационно-технической документации</p>
+        <div class="stats-badge">
+        </div>
     </div>
     
     <div class="container">
         <div class="info-card">
-            <h3>📌 Как это работает?</h3>
+            <h3>Как это работает?</h3>
             <ul>
                 <li>Введите свои ФИО</li>
                 <li>Выберите категорию тестирования</li>
-                <li>Ответьте на вопросы</li>
-                <li>Узнайте результат сразу после завершения</li>
-                <li>Результаты сохраняются в таблицу</li>
+                <li>Ответьте на все вопросы правильно</li>
+                <li>Результаты передаются руководителю отдела</li>
             </ul>
         </div>
         
         <div class="iframe-container">
-            <!-- ВСТАВЬ СВОЮ ССЫЛКУ -->
+            <!-- НОВАЯ ССЫЛКА -->
             <iframe 
                 src="https://script.google.com/macros/s/AKfycbzTNSgO7OVrdxDWaV1wRtrZ_sRxShaNlAmvDZU6rNP8YcZIsZXyjnCnKwjtxbBeRAjG/exec" 
                 title="Тестирование"
-                loading="lazy">
+                loading="lazy"
+                allow="microphone; camera">
             </iframe>
         </div>
         
-        <div class="footer">
-            🔒 Все данные защищены | Результаты сохраняются в таблицу | 
-            <a href="https://script.google.com/macros/s/AKfycbzTNSgO7OVrdxDWaV1wRtrZ_sRxShaNlAmvDZU6rNP8YcZIsZXyjnCnKwjtxbBeRAjG/exec" target="_blank">
-                Открыть в отдельном окне
-            </a>
-        </div>
     </div>
+    
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <script>
+        // Показываем загрузку при клике на ссылку
+        document.querySelector('a[target="_blank"]').addEventListener('click', function() {
+            document.getElementById('loading').style.display = 'flex';
+            setTimeout(function() {
+                document.getElementById('loading').style.display = 'none';
+            }, 2000);
+        });
+        
+        // Скрываем загрузку после загрузки iframe
+        document.querySelector('iframe').addEventListener('load', function() {
+            document.getElementById('loading').style.display = 'none';
+        });
+        
+        // Обработка ошибок iframe
+        document.querySelector('iframe').addEventListener('error', function() {
+            alert('Ошибка загрузки тестирования. Пожалуйста, обновите страницу или попробуйте позже.');
+        });
+        
+        // Добавляем год в копирайт
+        document.querySelector('.footer').innerHTML += 
+            '<br><span style="font-size: 0.8em; opacity: 0.7; margin-top: 10px; display: block;">© ' + 
+            new Date().getFullYear() + ' Система тестирования</span>';
+    </script>
 </body>
-
 </html>
