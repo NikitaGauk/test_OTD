@@ -3,7 +3,7 @@
 <head>
     <title>Тестирование знаний</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {
             margin: 0;
@@ -17,7 +17,7 @@
             min-height: 100vh;
         }
         
-        /* Шапка с названием отдела - компактная */
+        /* Шапка */
         .dept-header {
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
@@ -40,9 +40,9 @@
             opacity: 0.9;
         }
         
-        /* Контейнер для iframe - на весь экран */
+        /* Контейнер для теста */
         .test-container {
-            height: calc(100vh - 70px); /* Высота экрана минус шапка */
+            height: calc(100vh - 70px);
             width: 100%;
             padding: 10px;
         }
@@ -56,7 +56,7 @@
             background: white;
         }
         
-        /* Инструкция в виде маленькой плашки */
+        /* Инструкция - будет скрыта если есть параметры в URL */
         .info-bar {
             background: rgba(255,255,255,0.95);
             padding: 8px 15px;
@@ -75,6 +75,7 @@
             z-index: 1001;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.3);
+            transition: opacity 0.3s;
         }
         
         .info-item {
@@ -90,16 +91,16 @@
             font-weight: bold;
         }
         
-        /* Адаптация для мобильных */
+        /* Класс для скрытия инструкции */
+        .info-bar.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
         @media (max-width: 768px) {
             .dept-header h1 { font-size: 1.1em; }
             .dept-header p { font-size: 0.8em; }
             .test-container { height: calc(100vh - 60px); }
-            .info-bar { 
-                font-size: 0.75em;
-                padding: 6px 10px;
-                gap: 8px;
-            }
         }
         
         @media (max-width: 480px) {
@@ -115,28 +116,65 @@
     </style>
 </head>
 <body>
-    <!-- Компактная шапка с названием отдела -->
     <div class="dept-header">
         <h1>📋 Система тестирования</h1>
         <p>Отдел эксплуатационно-технической документации</p>
     </div>
     
-    <!-- Контейнер с тестом на весь экран -->
     <div class="test-container">
         <iframe 
             src="https://script.google.com/macros/s/AKfycbxdEy10fiDRFSdV6CrzyirgmwRaH8ieg99GFvan0pia9YANVloNarDhjoSvIbjwSGzr/exec" 
             title="Тестирование"
             loading="lazy"
-            allow="microphone; camera">
+            allow="microphone; camera"
+            id="testFrame">
         </iframe>
     </div>
     
-    <!-- Компактная инструкция внизу -->
-    <div class="info-bar">
+    <!-- Инструкция - будет автоматически скрыта после ввода данных -->
+    <div class="info-bar" id="infoBar">
         <span class="info-item">Введите ФИО</span>
         <span class="info-item">Выберите категорию</span>
         <span class="info-item">Ответьте на вопросы</span>
         <span class="info-item">Результат руководителю</span>
     </div>
+
+    <script>
+        // Функция для проверки параметров в URL
+        function hasTestParams() {
+            const params = new URLSearchParams(window.location.search);
+            return params.has('fio') && params.has('cat');
+        }
+
+        // Функция для проверки URL внутри iframe (если доступно)
+        function checkIframeUrl() {
+            try {
+                const iframeSrc = document.getElementById('testFrame').src;
+                return iframeSrc.includes('?fio=') && iframeSrc.includes('&cat=');
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Скрываем инструкцию если:
+        // 1. В URL родительской страницы есть параметры
+        // 2. Или в URL iframe есть параметры
+        if (hasTestParams() || checkIframeUrl()) {
+            document.getElementById('infoBar').classList.add('hidden');
+        }
+
+        // Следим за изменением URL в iframe (если браузер позволяет)
+        const iframe = document.getElementById('testFrame');
+        let lastSrc = iframe.src;
+
+        setInterval(() => {
+            if (iframe.src !== lastSrc) {
+                lastSrc = iframe.src;
+                if (iframe.src.includes('?fio=') && iframe.src.includes('&cat=')) {
+                    document.getElementById('infoBar').classList.add('hidden');
+                }
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
