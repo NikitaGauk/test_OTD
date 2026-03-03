@@ -40,29 +40,37 @@
             background: white;
         }
         
-        /* Маленькая подсказка сверху (будет скрыта после начала теста) */
-        .top-hint {
-            background: rgba(255,215,0,0.9);
-            color: #333;
-            padding: 8px 15px;
+        /* КНОПКА-ПОДСКАЗКА ВНИЗУ (только если нет параметров) */
+        .hint {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(5px);
+            padding: 12px 20px;
+            border-radius: 50px;
             text-align: center;
-            font-size: 0.9em;
-            font-weight: 500;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-            transition: opacity 0.3s;
+            font-size: 0.95em;
+            color: #333;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: 0.3s;
+            z-index: 1000;
         }
         
-        .top-hint.hidden {
-            display: none;
+        .hint.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 768px) {
+            .test-container { height: calc(100vh - 70px); }
+            .hint { font-size: 0.85em; padding: 10px 15px; }
         }
     </style>
 </head>
 <body>
-    <!-- Маленькая подсказка сверху (будет скрыта) -->
-    <div class="top-hint" id="topHint">
-        👆 Для начала теста: введите ФИО и выберите категорию
-    </div>
-    
     <div class="header">
         <h1>📋 Система тестирования</h1>
         <p>Отдел эксплуатационно-технической документации</p>
@@ -72,62 +80,30 @@
         <iframe 
             src="https://script.google.com/macros/s/AKfycbwRFEfaLgj0j0PYnTfk55GKCxSDbSc0x_cqP1ADhtTz3NOD_Mup44QfU3qnZjnCQN8x/exec" 
             title="Тестирование"
-            loading="lazy"
-            id="testFrame">
+            loading="lazy">
         </iframe>
+    </div>
+    
+    <!-- Подсказка, которая исчезнет после ввода ФИО -->
+    <div class="hint" id="hint">
+        👆 Введите ФИО и выберите категорию выше
     </div>
 
     <script>
-        // Функция для скрытия подсказки
-        function hideHint() {
-            const hint = document.getElementById('topHint');
-            if (hint) {
-                hint.classList.add('hidden');
-                console.log('Подсказка скрыта'); // для отладки
-            }
+        // Проверяем, есть ли уже параметры в URL (значит тест начат)
+        if (window.location.search.includes('fio=') && window.location.search.includes('cat=')) {
+            document.getElementById('hint').classList.add('hidden');
         }
 
-        // 1. Проверяем URL родительской страницы
-        if (window.location.search.includes('fio=') || window.location.search.includes('cat=')) {
-            hideHint();
-        }
-
-        // 2. Проверяем URL внутри iframe каждую секунду
+        // Следим за изменением URL в iframe
         const iframe = document.getElementById('testFrame');
-        let checkCount = 0;
-        
-        const interval = setInterval(() => {
-            try {
-                // Проверяем, изменился ли URL в iframe
+        if (iframe) {
+            setInterval(() => {
                 if (iframe.src.includes('?fio=')) {
-                    hideHint();
-                    clearInterval(interval); // останавливаем проверку
+                    document.getElementById('hint').classList.add('hidden');
                 }
-                
-                // Останавливаем проверку после 30 секунд (чтобы не грузить)
-                checkCount++;
-                if (checkCount > 30) {
-                    clearInterval(interval);
-                }
-            } catch (e) {
-                // Если не можем прочитать URL (безопасность браузера)
-                console.log('Не могу прочитать iframe');
-            }
-        }, 1000);
-
-        // 3. Слушаем сообщения от iframe (самый надёжный способ)
-        window.addEventListener('message', function(event) {
-            // Проверяем, что сообщение от нашего скрипта
-            if (event.data && event.data.type === 'TEST_STARTED') {
-                hideHint();
-            }
-        });
-
-        // 4. Отправляем сообщение в iframe, чтобы он тоже мог нам ответить
-        setTimeout(() => {
-            iframe.contentWindow.postMessage({ type: 'CHECK_STATUS' }, '*');
-        }, 2000);
+            }, 1000);
+        }
     </script>
 </body>
 </html>
-
