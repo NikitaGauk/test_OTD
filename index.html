@@ -40,33 +40,8 @@
             background: white;
         }
         
-        /* КНОПКА-ПОДСКАЗКА ВНИЗУ */
-        .hint {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(5px);
-            padding: 12px 20px;
-            border-radius: 50px;
-            text-align: center;
-            font-size: 0.95em;
-            color: #333;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.5);
-            transition: 0.3s;
-            z-index: 1000;
-        }
-        
-        .hint.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        
         @media (max-width: 768px) {
             .test-container { height: calc(100vh - 70px); }
-            .hint { font-size: 0.85em; padding: 10px 15px; }
         }
     </style>
 </head>
@@ -84,53 +59,5 @@
             id="testFrame">
         </iframe>
     </div>
-    
-    <!-- Подсказка, которая исчезнет после ввода ФИО -->
-    <div class="hint" id="hint">
-        👆 Введите ФИО и выберите категорию выше
-    </div>
-
-    <script>
-        // Функция для скрытия подсказки
-        function hideHint() {
-            const hint = document.getElementById('hint');
-            if (hint) {
-                hint.classList.add('hidden');
-            }
-        }
-
-        // Проверяем URL родительской страницы
-        if (window.location.search.includes('fio=')) {
-            hideHint();
-        }
-
-        // Следим за изменением URL в iframe
-        const iframe = document.getElementById('testFrame');
-        let checkCount = 0;
-        
-        const interval = setInterval(() => {
-            try {
-                // Проверяем, изменился ли URL в iframe
-                if (iframe.src.includes('?fio=')) {
-                    hideHint();
-                    clearInterval(interval);
-                }
-                
-                checkCount++;
-                if (checkCount > 30) {
-                    clearInterval(interval);
-                }
-            } catch (e) {
-                // Игнорируем ошибки доступа к iframe
-            }
-        }, 1000);
-
-        // Слушаем сообщения от iframe
-        window.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'TEST_STARTED') {
-                hideHint();
-            }
-        });
-    </script>
 </body>
 </html>
