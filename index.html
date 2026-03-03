@@ -5,11 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -18,31 +14,20 @@
         }
         
         /* Шапка */
-        .dept-header {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
+        .header {
+            background: rgba(0,0,0,0.2);
             color: white;
-            padding: 10px 20px;
+            padding: 15px 20px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
         
-        .dept-header h1 {
-            font-size: 1.3em;
-            margin-bottom: 2px;
-        }
+        .header h1 { font-size: 1.5em; margin-bottom: 5px; }
+        .header p { font-size: 1em; opacity: 0.9; }
         
-        .dept-header p {
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-        
-        /* Контейнер для теста */
+        /* Контейнер для теста на весь экран */
         .test-container {
-            height: calc(100vh - 70px);
+            height: calc(100vh - 80px);
             width: 100%;
             padding: 10px;
         }
@@ -52,71 +37,33 @@
             height: 100%;
             border: none;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             background: white;
         }
         
-        /* Инструкция - будет скрыта если есть параметры в URL */
-        .info-bar {
-            background: rgba(255,255,255,0.95);
+        /* Маленькая подсказка сверху (будет скрыта после начала теста) */
+        .top-hint {
+            background: rgba(255,215,0,0.9);
+            color: #333;
             padding: 8px 15px;
-            margin: 10px;
-            border-radius: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            font-size: 0.85em;
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            z-index: 1001;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.3);
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
             transition: opacity 0.3s;
         }
         
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: #333;
-        }
-        
-        .info-item:before {
-            content: "✓";
-            color: #28a745;
-            font-weight: bold;
-        }
-        
-        /* Класс для скрытия инструкции */
-        .info-bar.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        @media (max-width: 768px) {
-            .dept-header h1 { font-size: 1.1em; }
-            .dept-header p { font-size: 0.8em; }
-            .test-container { height: calc(100vh - 60px); }
-        }
-        
-        @media (max-width: 480px) {
-            .info-bar {
-                flex-direction: column;
-                align-items: flex-start;
-                border-radius: 15px;
-                bottom: 10px;
-                left: 10px;
-                right: 10px;
-            }
+        .top-hint.hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="dept-header">
+    <!-- Маленькая подсказка сверху (будет скрыта) -->
+    <div class="top-hint" id="topHint">
+        👆 Для начала теста: введите ФИО и выберите категорию
+    </div>
+    
+    <div class="header">
         <h1>📋 Система тестирования</h1>
         <p>Отдел эксплуатационно-технической документации</p>
     </div>
@@ -126,56 +73,60 @@
             src="https://script.google.com/macros/s/AKfycby5itrgA3bchHLEasRGkWx3v_Q4pfVfHiYu2KZYrI5Q0tRFMAqR5Ldjsa-jmMwMsvB3/exec" 
             title="Тестирование"
             loading="lazy"
-            allow="microphone; camera"
             id="testFrame">
         </iframe>
     </div>
-    
-    <!-- Инструкция - будет автоматически скрыта после ввода данных -->
-    <div class="info-bar" id="infoBar">
-        <span class="info-item">Введите ФИО</span>
-        <span class="info-item">Выберите категорию</span>
-        <span class="info-item">Ответьте на вопросы</span>
-        <span class="info-item">Результат руководителю</span>
-    </div>
 
     <script>
-        // Функция для проверки параметров в URL
-        function hasTestParams() {
-            const params = new URLSearchParams(window.location.search);
-            return params.has('fio') && params.has('cat');
-        }
-
-        // Функция для проверки URL внутри iframe (если доступно)
-        function checkIframeUrl() {
-            try {
-                const iframeSrc = document.getElementById('testFrame').src;
-                return iframeSrc.includes('?fio=') && iframeSrc.includes('&cat=');
-            } catch (e) {
-                return false;
+        // Функция для скрытия подсказки
+        function hideHint() {
+            const hint = document.getElementById('topHint');
+            if (hint) {
+                hint.classList.add('hidden');
+                console.log('Подсказка скрыта'); // для отладки
             }
         }
 
-        // Скрываем инструкцию если:
-        // 1. В URL родительской страницы есть параметры
-        // 2. Или в URL iframe есть параметры
-        if (hasTestParams() || checkIframeUrl()) {
-            document.getElementById('infoBar').classList.add('hidden');
+        // 1. Проверяем URL родительской страницы
+        if (window.location.search.includes('fio=') || window.location.search.includes('cat=')) {
+            hideHint();
         }
 
-        // Следим за изменением URL в iframe (если браузер позволяет)
+        // 2. Проверяем URL внутри iframe каждую секунду
         const iframe = document.getElementById('testFrame');
-        let lastSrc = iframe.src;
-
-        setInterval(() => {
-            if (iframe.src !== lastSrc) {
-                lastSrc = iframe.src;
-                if (iframe.src.includes('?fio=') && iframe.src.includes('&cat=')) {
-                    document.getElementById('infoBar').classList.add('hidden');
+        let checkCount = 0;
+        
+        const interval = setInterval(() => {
+            try {
+                // Проверяем, изменился ли URL в iframe
+                if (iframe.src.includes('?fio=')) {
+                    hideHint();
+                    clearInterval(interval); // останавливаем проверку
                 }
+                
+                // Останавливаем проверку после 30 секунд (чтобы не грузить)
+                checkCount++;
+                if (checkCount > 30) {
+                    clearInterval(interval);
+                }
+            } catch (e) {
+                // Если не можем прочитать URL (безопасность браузера)
+                console.log('Не могу прочитать iframe');
             }
         }, 1000);
+
+        // 3. Слушаем сообщения от iframe (самый надёжный способ)
+        window.addEventListener('message', function(event) {
+            // Проверяем, что сообщение от нашего скрипта
+            if (event.data && event.data.type === 'TEST_STARTED') {
+                hideHint();
+            }
+        });
+
+        // 4. Отправляем сообщение в iframe, чтобы он тоже мог нам ответить
+        setTimeout(() => {
+            iframe.contentWindow.postMessage({ type: 'CHECK_STATUS' }, '*');
+        }, 2000);
     </script>
 </body>
 </html>
-
