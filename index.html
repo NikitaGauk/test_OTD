@@ -40,7 +40,7 @@
             background: white;
         }
         
-        /* КНОПКА-ПОДСКАЗКА ВНИЗУ (только если нет параметров) */
+        /* КНОПКА-ПОДСКАЗКА ВНИЗУ */
         .hint {
             position: fixed;
             bottom: 20px;
@@ -80,7 +80,8 @@
         <iframe 
             src="https://script.google.com/macros/s/AKfycbwRFEfaLgj0j0PYnTfk55GKCxSDbSc0x_cqP1ADhtTz3NOD_Mup44QfU3qnZjnCQN8x/exec" 
             title="Тестирование"
-            loading="lazy">
+            loading="lazy"
+            id="testFrame">
         </iframe>
     </div>
     
@@ -90,20 +91,46 @@
     </div>
 
     <script>
-        // Проверяем, есть ли уже параметры в URL (значит тест начат)
-        if (window.location.search.includes('fio=') && window.location.search.includes('cat=')) {
-            document.getElementById('hint').classList.add('hidden');
+        // Функция для скрытия подсказки
+        function hideHint() {
+            const hint = document.getElementById('hint');
+            if (hint) {
+                hint.classList.add('hidden');
+            }
+        }
+
+        // Проверяем URL родительской страницы
+        if (window.location.search.includes('fio=')) {
+            hideHint();
         }
 
         // Следим за изменением URL в iframe
         const iframe = document.getElementById('testFrame');
-        if (iframe) {
-            setInterval(() => {
+        let checkCount = 0;
+        
+        const interval = setInterval(() => {
+            try {
+                // Проверяем, изменился ли URL в iframe
                 if (iframe.src.includes('?fio=')) {
-                    document.getElementById('hint').classList.add('hidden');
+                    hideHint();
+                    clearInterval(interval);
                 }
-            }, 1000);
-        }
+                
+                checkCount++;
+                if (checkCount > 30) {
+                    clearInterval(interval);
+                }
+            } catch (e) {
+                // Игнорируем ошибки доступа к iframe
+            }
+        }, 1000);
+
+        // Слушаем сообщения от iframe
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'TEST_STARTED') {
+                hideHint();
+            }
+        });
     </script>
 </body>
 </html>
